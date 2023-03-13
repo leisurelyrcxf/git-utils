@@ -1,0 +1,24 @@
+#!/bin/bash
+
+names=("xiaofan" "chinying" "christabel" "huajun")
+
+set -e
+
+for name in "${names[@]}"
+do
+	echo -n "$name: "
+	git log --author="$name" --pretty=tformat: --numstat | grep -i ".ts$\|.tsx$\|.py$\|.jsx$\|.js$" | gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+
+	echo -n "    dev: "
+	git log --author="$name" --pretty=tformat: --numstat | grep -i ".ts$\|.tsx$\|.py$\|.jsx$\|.js$" | grep -vi "test.ts$" | gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+	echo -n "    test: "
+	git log --author="$name" --pretty=tformat: --numstat | grep -i "test.ts$" | gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+
+	echo -n "    frontend exclude test: "
+	git log --author="$name" --pretty=tformat: --numstat | grep -i ".ts$\|.tsx$\|.py$\|.jsx$\|.js$" | grep -i spf-dashboard | grep -vi "test.ts$" |  gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+	echo -n "    backend exclude test: "
+	git log --author="$name" --pretty=tformat: --numstat | grep -i ".ts$\|.tsx$\|.py$\|.jsx$\|.js$" | grep -i backend | grep -vi "test.ts$" | gawk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s removed lines: %s total lines: %s\n", add, subs, loc }' -
+
+	echo ""
+	echo ""
+done
