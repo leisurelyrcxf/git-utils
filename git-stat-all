@@ -1,6 +1,6 @@
 #!/bin/bash
 
-names=("xiaofan" "chinying" "christabel" "huajun")
+names=("xiaofan" "huajun" "chinying" "christabel")
 
 set -e
 
